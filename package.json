@@ -1,8 +1,10 @@
 {
   "dependencies": {
+    "express": "^4.18.1",
     "fs": "^0.0.1-security",
     "minimist": "^1.2.6",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.16"
   },
   "scripts": {
     "start": "node server.js"
