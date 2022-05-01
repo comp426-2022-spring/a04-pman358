@@ -26,7 +26,14 @@ const help = (`
 if(args.help || args.h) {
   console.log(help)
   process.exit(0)
-}  
+}
+
+if (args.log == 'false') {
+  console.log("Not working")
+} else {
+  const accessLog = fs.createWriteStream('access.log', { flags: 'a' })
+  app.use(morgan('combined', { stream: accessLog }))
+}
 
 app.use((req, res, next) => {
   let logdata = {
@@ -54,13 +61,6 @@ if (args.debug || args.d) {
   app.get('/app/error/', (req, res) => {
       throw new Error('Error, test works.')
   })
-}
-
-if (args.log == 'false') {
-  console.log("NOTICE: not creating file access.log")
-} else {
-  const accessLog = fs.createWriteStream('access.log', { flags: 'a' })
-  app.use(morgan('combined', { stream: accessLog }))
 }
 
 const server = app.listen(port, () => {
