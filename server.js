@@ -7,6 +7,9 @@ const args = require('minimist')(process.argv.slice(2))
 args['port']
 const port = args.port || process.env.PORT || 5000
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 const help = (`
     server.js [options]
     --port, -p	Set the port number for the server to listen on. Must be an integer
