@@ -23,7 +23,38 @@ const help = (`
 if(args.help || args.h) {
   console.log(help)
   process.exit(0)
-}    
+}  
+
+app.use((req, res, next) => {
+  let logdata = {
+      remoteaddr: req.ip,
+      remoteuser: req.user,
+      time: Date.now(),
+      method: req.method,
+      url: req.url,
+      protocol: req.protocol,
+      httpversion: req.httpVersion,
+      status: res.statusCode,
+      referrer: req.headers['referer'],
+      useragent: req.headers['user-agent']
+  };
+})
+
+if (args.debug || args.d) {
+  app.get('/app/log/access/', (req, res) => {
+      const stmt = db.prepare("SELECT * FROM accesslog").all();
+    res.status(200).json(stmt);
+  })
+
+  app.get('/app/error/', (req, res) => {
+      throw new Error('Error, test works.')
+  })
+}
+
+if (args.log == 'true') {
+  const accessLog = fs.createWriteStream('access.log', { flags: 'a' })
+  app.use(morgan('combined', { stream: accessLog }))
+}
 
 const server = app.listen(port, () => {
     console.log(`App is running on port ${port}`)
